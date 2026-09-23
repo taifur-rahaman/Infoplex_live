@@ -4,12 +4,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}EduPlatform{% endblock %}</title>
-  <meta name="description" content="{% block meta_description %}Master your future from secondary school to engineering with EduPlatform.{% endblock %}">
+  <title>{% block title %}InfoPlex{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Master your future from secondary school to engineering with InfoPlex.{% endblock %}">
   <script>
     (function () {
       try {
-        var key = "eduplatform-theme";
+        var key = "infoplex-theme";
         var stored = localStorage.getItem(key);
         var theme = stored === "light" || stored === "dark"
           ? stored
@@ -27,8 +27,8 @@
   <header class="site-header">
     <div class="site-header__inner">
       <a class="brand" href="{% url 'lms:home' %}">
-        <span class="brand__mark" aria-hidden="true">E</span>
-        <span class="brand__name">EduPlatform</span>
+        <span class="brand__mark" aria-hidden="true">I</span>
+        <span class="brand__name">InfoPlex</span>
       </a>
 
       <form class="header-search" action="{% url 'lms:catalog' %}" method="get" role="search">
@@ -108,7 +108,7 @@
 
   <footer class="site-footer">
     <div class="site-footer__inner">
-      <p>© {% now "Y" %} EduPlatform · From secondary school to engineering</p>
+      <p>© {% now "Y" %} InfoPlex · From secondary school to engineering</p>
       <nav aria-label="Footer">
         <a href="/admin/">Admin Login</a>
         <a href="{% url 'accounts:login' %}">Instructor Login</a>

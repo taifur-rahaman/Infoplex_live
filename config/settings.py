@@ -1,5 +1,5 @@
 """
-Django settings for EduPlatform.
+Django settings for InfoPlex.
 SQLite by default; set DATABASE_URL for PostgreSQL.
 """
 import os
@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
-    "django-insecure-eduplatform-dev-only-change-in-production",
+    "django-insecure-infoplex-dev-only-change-in-production",
 )
 
 DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("1", "true", "yes")
@@ -106,14 +106,14 @@ LOGOUT_REDIRECT_URL = "lms:home"
 # Brevo email (mock/fallback when no API key)
 BREVO_API_KEY = os.environ.get("BREVO_API_KEY", "").strip()
 BREVO_SENDER_EMAIL = os.environ.get(
-    "BREVO_SENDER_EMAIL", "noreply@eduplatform.local"
+    "BREVO_SENDER_EMAIL", "noreply@infoplex.local"
 )
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = BREVO_SENDER_EMAIL
 
 # Manual bKash payment
 BKASH_ACCOUNT_NUMBER = os.environ.get("BKASH_ACCOUNT_NUMBER", "01700000000")
-BKASH_ACCOUNT_NAME = os.environ.get("BKASH_ACCOUNT_NAME", "EduPlatform")
+BKASH_ACCOUNT_NAME = os.environ.get("BKASH_ACCOUNT_NAME", "InfoPlex")
 
 # Pagination
 COURSES_PER_PAGE = 8

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ course.title }} — EduPlatform{% endblock %}
+{% block title %}{{ course.title }} — InfoPlex{% endblock %}
 
 {% block content %}
 <div class="container" style="padding:1.5rem 0 3rem;">
@@ -78,7 +78,7 @@
         <div class="avatar">{{ course.instructor.first_name|default:"I"|slice:":1" }}</div>
         <div>
           <h3 style="font-size:1.1rem;">{{ course.instructor.get_full_name|default:course.instructor }}</h3>
-          <p>{{ course.instructor_bio|default:"Experienced EduPlatform instructor." }}</p>
+          <p>{{ course.instructor_bio|default:"Experienced InfoPlex instructor." }}</p>
         </div>
       </div>
     </section>

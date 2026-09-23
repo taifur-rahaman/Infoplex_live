@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 def send_platform_email(to_email: str, subject: str, html_content: str, text_content: str = "") -> bool:
     """Send via Brevo API when BREVO_API_KEY is set; otherwise log/console."""
     api_key = getattr(settings, "BREVO_API_KEY", "") or ""
-    sender = getattr(settings, "BREVO_SENDER_EMAIL", "noreply@eduplatform.local")
+    sender = getattr(settings, "BREVO_SENDER_EMAIL", "noreply@infoplex.local")
     text = text_content or html_content
 
     if not api_key:
@@ -29,7 +29,7 @@ def send_platform_email(to_email: str, subject: str, html_content: str, text_con
         return True
 
     payload = {
-        "sender": {"email": sender, "name": "EduPlatform"},
+        "sender": {"email": sender, "name": "InfoPlex"},
         "to": [{"email": to_email}],
         "subject": subject,
         "htmlContent": html_content,

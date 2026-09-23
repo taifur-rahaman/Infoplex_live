@@ -1,5 +1,5 @@
 (function () {
-  var THEME_KEY = "eduplatform-theme";
+  var THEME_KEY = "infoplex-theme";
 
   function preferredTheme() {
     try {

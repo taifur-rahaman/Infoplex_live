@@ -1,4 +1,4 @@
-# EduPlatform (Infoplex)
+# InfoPlex
 
 Django LMS for secondary school through CSE & EEE — courses, YouTube embeds, module quizzes, student dashboard, and manual bKash checkout.
 
@@ -44,7 +44,7 @@ Copy `.env.example`. Optional keys:
 
 ## Theme
 
-Light and dark modes via CSS variables. Header sun/moon toggle persists to `localStorage` (`eduplatform-theme`); first visit follows `prefers-color-scheme`. An early inline script sets `data-theme` before paint to avoid flash.
+Light and dark modes via CSS variables. Header sun/moon toggle persists to `localStorage` (`infoplex-theme`); first visit follows `prefers-color-scheme`. An early inline script sets `data-theme` before paint to avoid flash.
 
 ## Features
 

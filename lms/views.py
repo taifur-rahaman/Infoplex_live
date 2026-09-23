@@ -622,12 +622,12 @@ def signup(request):
             login(request, user)
             send_platform_email(
                 user.email,
-                "Welcome to EduPlatform",
+                "Welcome to InfoPlex",
                 f"<p>Hi {user.first_name or user.username}, welcome aboard. "
                 "Start with your learning roadmap or browse the catalog.</p>",
             )
-            ActivityLog.objects.create(user=user, message="Joined EduPlatform")
-            messages.success(request, "Account created — welcome to EduPlatform!")
+            ActivityLog.objects.create(user=user, message="Joined InfoPlex")
+            messages.success(request, "Account created — welcome to InfoPlex!")
             return redirect("lms:dashboard")
     else:
         form = SignupForm()

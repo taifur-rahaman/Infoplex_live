@@ -35,15 +35,15 @@ YT = {
 
 
 class Command(BaseCommand):
-    help = "Seed EduPlatform with realistic demo courses, users, and enrollments"
+    help = "Seed InfoPlex with realistic demo courses, users, and enrollments"
 
     def handle(self, *args, **options):
-        self.stdout.write("Seeding EduPlatform…")
+        self.stdout.write("Seeding InfoPlex…")
 
         admin_user, created = User.objects.get_or_create(
             username="admin",
             defaults={
-                "email": "admin@eduplatform.local",
+                "email": "admin@infoplex.local",
                 "is_staff": True,
                 "is_superuser": True,
                 "first_name": "Ada",
@@ -63,7 +63,7 @@ class Command(BaseCommand):
         ]:
             user, created = User.objects.get_or_create(
                 username=username,
-                defaults={"email": f"{username}@eduplatform.local", "first_name": first, "last_name": last},
+                defaults={"email": f"{username}@infoplex.local", "first_name": first, "last_name": last},
             )
             if created:
                 user.set_password("teach123")
@@ -76,7 +76,7 @@ class Command(BaseCommand):
         student, created = User.objects.get_or_create(
             username="student",
             defaults={
-                "email": "student@eduplatform.local",
+                "email": "student@infoplex.local",
                 "first_name": "Sara",
                 "last_name": "Ahmed",
             },
