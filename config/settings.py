@@ -112,7 +112,7 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = BREVO_SENDER_EMAIL
 
 # Brand / site display name (single source of truth for UI titles & chrome)
-# Brand is fixed — do not override via env (avoids stale SITE_NAME=EduPlatform)
+# Brand is fixed — do not override via env (avoids stale SITE_NAME=InfoPlex)
 SITE_NAME = "InfoPlex"
 BRAND_MARK = "I"
 
