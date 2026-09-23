@@ -1,6 +1,7 @@
 from datetime import timedelta
 from decimal import Decimal
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.utils import timezone
@@ -38,7 +39,8 @@ class Command(BaseCommand):
     help = "Seed InfoPlex with realistic demo courses, users, and enrollments"
 
     def handle(self, *args, **options):
-        self.stdout.write("Seeding InfoPlex…")
+        site_name = getattr(settings, "SITE_NAME", "InfoPlex")
+        self.stdout.write(f"Seeding {site_name}…")
 
         admin_user, created = User.objects.get_or_create(
             username="admin",

@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}InfoPlex — Master Your Future{% endblock %}
+{% block title %}{{ site_name }} — Master Your Future{% endblock %}
 
 {% block content %}
-<section class="hero-bleed" aria-label="InfoPlex hero">
+<section class="hero-bleed" aria-label="{{ site_name }} hero">
   <div class="hero-orbit" aria-hidden="true"></div>
   <div class="hero-bleed__inner">
-    <p class="hero-bleed__brand">InfoPlex</p>
+    <p class="hero-bleed__brand">{{ site_name }}</p>
     <h1 class="hero-bleed__title">Master Your Future: From Secondary School to Engineering.</h1>
     <p class="hero-bleed__lede">Structured paths, live progress, and module quizzes — built for SSC through CSE &amp; EEE.</p>
     <div class="hero-actions">
@@ -17,6 +17,10 @@
 
 <div class="home-body">
   <aside class="sidebar panel--lift">
+    <p class="sidebar__brand" aria-label="{{ site_name }}">
+      <span class="brand__mark" aria-hidden="true">{{ brand_mark }}</span>
+      <span class="brand__name">{{ site_name }}</span>
+    </p>
     <p class="sidebar__label">My Menu</p>
     <a class="side-link is-active" href="{% url 'lms:home' %}"><span class="side-link__dot"></span> Dashboard Home</a>
     <a class="side-link" href="{% url 'lms:roadmap' %}"><span class="side-link__dot"></span> My Learning Roadmap</a>

@@ -1,9 +1,13 @@
 {% extends "base.html" %}
-{% block title %}Quizzes &amp; Exams — InfoPlex{% endblock %}
+{% block title %}Quizzes &amp; Exams — {{ site_name }}{% endblock %}
 
 {% block content %}
 <div class="page-shell">
   <aside class="sidebar">
+    <p class="sidebar__brand" aria-label="{{ site_name }}">
+      <span class="brand__mark" aria-hidden="true">{{ brand_mark }}</span>
+      <span class="brand__name">{{ site_name }}</span>
+    </p>
     <p class="sidebar__label">Student</p>
     <a class="side-link" href="{% url 'lms:dashboard' %}">My Courses</a>
     <a class="side-link is-active" href="{% url 'lms:quizzes' %}">Quizzes &amp; Exams</a>

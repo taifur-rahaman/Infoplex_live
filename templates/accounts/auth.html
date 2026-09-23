@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{% if auth_mode == "signup" %}Sign up{% else %}Welcome{% endif %} — InfoPlex{% endblock %}
+{% block title %}{% if auth_mode == "signup" %}Sign up{% else %}Welcome{% endif %} — {{ site_name }}{% endblock %}
 
 {% block content %}
 <div class="auth-page">
@@ -11,7 +11,7 @@
 
     {% if auth_mode == "signup" %}
       <h1 style="font-size:1.6rem;">Create your account</h1>
-      <p>Join engineers and students learning on InfoPlex.</p>
+      <p>Join engineers and students learning on {{ site_name }}.</p>
       <form method="post" class="form-stack">
         {% csrf_token %}
         {% for field in form %}

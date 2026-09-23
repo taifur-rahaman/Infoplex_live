@@ -29,7 +29,7 @@ def send_platform_email(to_email: str, subject: str, html_content: str, text_con
         return True
 
     payload = {
-        "sender": {"email": sender, "name": "InfoPlex"},
+        "sender": {"email": sender, "name": getattr(settings, "SITE_NAME", "InfoPlex")},
         "to": [{"email": to_email}],
         "subject": subject,
         "htmlContent": html_content,

@@ -1,9 +1,13 @@
 {% extends "base.html" %}
-{% block title %}{% if category %}{{ category.name }} · {% endif %}Course Catalog — InfoPlex{% endblock %}
+{% block title %}{% if category %}{{ category.name }} · {% endif %}Course Catalog — {{ site_name }}{% endblock %}
 
 {% block content %}
 <div class="page-shell page-shell--catalog">
   <aside class="sidebar">
+    <p class="sidebar__brand" aria-label="{{ site_name }}">
+      <span class="brand__mark" aria-hidden="true">{{ brand_mark }}</span>
+      <span class="brand__name">{{ site_name }}</span>
+    </p>
     <p class="sidebar__label">Filters</p>
     <div class="filter-group">
       <h4>Category</h4>

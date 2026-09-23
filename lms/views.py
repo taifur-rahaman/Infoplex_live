@@ -620,14 +620,17 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+            site_name = getattr(settings, "SITE_NAME", "InfoPlex")
             send_platform_email(
                 user.email,
-                "Welcome to InfoPlex",
+                f"Welcome to {site_name}",
                 f"<p>Hi {user.first_name or user.username}, welcome aboard. "
                 "Start with your learning roadmap or browse the catalog.</p>",
             )
-            ActivityLog.objects.create(user=user, message="Joined InfoPlex")
-            messages.success(request, "Account created — welcome to InfoPlex!")
+            ActivityLog.objects.create(user=user, message=f"Joined {site_name}")
+            messages.success(
+                request, f"Account created — welcome to {site_name}!"
+            )
             return redirect("lms:dashboard")
     else:
         form = SignupForm()
