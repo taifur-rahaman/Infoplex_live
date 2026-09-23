@@ -1,4 +1,57 @@
 (function () {
+  var THEME_KEY = "eduplatform-theme";
+
+  function preferredTheme() {
+    try {
+      var stored = localStorage.getItem(THEME_KEY);
+      if (stored === "light" || stored === "dark") return stored;
+    } catch (e) {}
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+
+  function applyTheme(theme, persist) {
+    document.documentElement.setAttribute("data-theme", theme);
+    if (persist) {
+      try {
+        localStorage.setItem(THEME_KEY, theme);
+      } catch (e) {}
+    }
+    document.querySelectorAll(".theme-toggle, #theme-toggle-mobile").forEach(function (btn) {
+      var next = theme === "dark" ? "light" : "dark";
+      btn.setAttribute("aria-label", "Switch to " + next + " mode");
+      if (btn.id === "theme-toggle-mobile") {
+        btn.textContent = theme === "dark" ? "Switch to light mode" : "Switch to dark mode";
+      }
+    });
+  }
+
+  function toggleTheme() {
+    var current = document.documentElement.getAttribute("data-theme") || preferredTheme();
+    applyTheme(current === "dark" ? "light" : "dark", true);
+  }
+
+  // Ensure attribute is set even if early script failed (do not persist yet)
+  if (!document.documentElement.getAttribute("data-theme")) {
+    applyTheme(preferredTheme(), false);
+  } else {
+    applyTheme(document.documentElement.getAttribute("data-theme"), false);
+  }
+
+  document.querySelectorAll("#theme-toggle, #theme-toggle-mobile").forEach(function (el) {
+    el.addEventListener("click", toggleTheme);
+  });
+
+  // Follow OS only when user has not chosen yet
+  try {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
+      if (!localStorage.getItem(THEME_KEY)) {
+        applyTheme(e.matches ? "dark" : "light", false);
+      }
+    });
+  } catch (e) {}
+
   const drawer = document.getElementById("mobile-drawer");
   const toggle = document.getElementById("menu-toggle");
   if (toggle && drawer) {

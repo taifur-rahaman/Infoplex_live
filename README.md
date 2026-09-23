@@ -42,6 +42,10 @@ Copy `.env.example`. Optional keys:
 - `BKASH_ACCOUNT_NUMBER` / `BKASH_ACCOUNT_NAME`
 - `DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `DJANGO_ALLOWED_HOSTS`
 
+## Theme
+
+Light and dark modes via CSS variables. Header sun/moon toggle persists to `localStorage` (`eduplatform-theme`); first visit follows `prefers-color-scheme`. An early inline script sets `data-theme` before paint to avoid flash.
+
 ## Features
 
-Homepage (hero, categories, search) · catalog filters & pagination · course detail · signup/login · checkout + coupons + bKash · student dashboard · course player · timed quizzes · full Django Admin · optional roadmap/prerequisites
+Homepage (hero, categories, search) · catalog filters & pagination · course detail · signup/login · checkout + coupons + bKash · student dashboard · course player · timed quizzes · full Django Admin · optional roadmap/prerequisites · light/dark theme
