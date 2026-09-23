@@ -112,8 +112,9 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = BREVO_SENDER_EMAIL
 
 # Brand / site display name (single source of truth for UI titles & chrome)
-SITE_NAME = os.environ.get("SITE_NAME", "InfoPlex").strip() or "InfoPlex"
-BRAND_MARK = os.environ.get("BRAND_MARK", SITE_NAME[:1].upper()).strip() or "I"
+# Brand is fixed — do not override via env (avoids stale SITE_NAME=EduPlatform)
+SITE_NAME = "InfoPlex"
+BRAND_MARK = "I"
 
 # Manual bKash payment
 BKASH_ACCOUNT_NUMBER = os.environ.get("BKASH_ACCOUNT_NUMBER", "01700000000")
