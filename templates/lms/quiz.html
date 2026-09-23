@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ quiz.title }} — Quiz{% endblock %}
+
+{% block content %}
+<div class="quiz-shell">
+  <p style="margin:0;color:var(--muted);font-size:0.9rem;"><a href="{% url 'lms:player_start' course.slug %}">{{ course.code }}</a> · {{ quiz.module.title }}</p>
+  <h1 style="font-size:1.5rem;">{{ quiz.title }}</h1>
+  <p>Pass score {{ quiz.pass_score }}% · {{ questions|length }} question{{ questions|pluralize }}</p>
+
+  <div class="quiz-timer" id="quiz-timer" data-seconds="{{ time_limit_seconds }}">
+    Time Left: <span>{{ quiz.time_limit_minutes }}:00</span>
+  </div>
+
+  <form method="post" id="quiz-form">
+    {% csrf_token %}
+    {% for question in questions %}
+      <div class="question-block">
+        <h3 style="font-size:1.05rem;">Q{{ forloop.counter }}: {{ question.text }}</h3>
+        <div class="choice-list">
+          {% for choice in question.choices.all %}
+            <label>
+              <input type="radio" name="q_{{ question.pk }}" value="{{ choice.pk }}" required>
+              <span>{{ choice.text }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+    <button class="btn btn--primary" type="submit">Submit Answers</button>
+  </form>
+</div>
+{% endblock %}

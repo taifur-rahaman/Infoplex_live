@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard — EduPlatform{% endblock %}
+
+{% block content %}
+<div class="page-shell">
+  <aside class="sidebar">
+    <p class="sidebar__label">Student</p>
+    <a class="side-link is-active" href="{% url 'lms:dashboard' %}"><span class="side-link__dot"></span> My Courses</a>
+    <a class="side-link" href="{% url 'lms:roadmap' %}"><span class="side-link__dot"></span> Learning Roadmap</a>
+    <a class="side-link" href="{% url 'lms:quizzes' %}"><span class="side-link__dot"></span> Grades &amp; Quizzes</a>
+    <a class="side-link" href="{% url 'lms:billing' %}"><span class="side-link__dot"></span> Billing</a>
+    <a class="side-link" href="{% url 'accounts:logout' %}"><span class="side-link__dot"></span> Log out</a>
+  </aside>
+
+  <div class="dash-grid">
+    <section>
+      <div class="page-title">
+        <h1>My Progress</h1>
+        <p>Welcome back{% if user.first_name %}, {{ user.first_name }}{% endif %}.</p>
+      </div>
+      {% if enrollments %}
+        <div class="progress-cards">
+          {% for e in enrollments %}
+            {% with pct=e.progress_percent %}
+            <article class="progress-card">
+              <h3 style="font-size:1.1rem;">{{ e.course.code }}: {{ e.course.title }}</h3>
+              <div class="progress-bar" aria-hidden="true"><span style="width:{{ pct }}%;"></span></div>
+              <p style="margin:0 0 0.75rem;font-size:0.9rem;">{{ pct }}% Complete</p>
+              <a class="btn btn--primary btn--sm" href="{% url 'lms:player_start' e.course.slug %}">Continue</a>
+            </article>
+            {% endwith %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <h2>No active courses yet</h2>
+          <p>Browse the catalog and enroll — try coupon <code>FREELEARN</code> for instant access.</p>
+          <a class="btn btn--primary" href="{% url 'lms:catalog' %}">Explore courses</a>
+        </div>
+      {% endif %}
+    </section>
+
+    {% if pending %}
+    <section class="panel">
+      <h2>Pending payment</h2>
+      <ul class="activity-feed">
+        {% for e in pending %}
+          <li>{{ e.course.title }} — awaiting bKash verification</li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+    <section>
+      <h2 style="margin-bottom:0.85rem;">Recommended for You</h2>
+      {% if recommended %}
+        <div class="course-grid">
+          {% for course in recommended %}
+            {% include "lms/partials/course_card.html" with course=course %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state"><p>You’re enrolled in everything we recommend for now.</p></div>
+      {% endif %}
+    </section>
+
+    <section class="panel">
+      <h2>Recent Activity</h2>
+      <ul class="activity-feed">
+        {% for a in activities %}
+          <li>{{ a.message }} <span style="color:var(--muted);">· {{ a.created_at|timesince }} ago</span></li>
+        {% empty %}
+          <li>No activity yet — start a lesson to fill this feed.</li>
+        {% endfor %}
+      </ul>
+    </section>
+  </div>
+</div>
+{% endblock %}

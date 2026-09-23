@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}EduPlatform{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Master your future from secondary school to engineering with EduPlatform.{% endblock %}">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="{% url 'lms:home' %}">
+        <span class="brand__mark" aria-hidden="true">E</span>
+        <span class="brand__name">EduPlatform</span>
+      </a>
+
+      <form class="header-search" action="{% url 'lms:catalog' %}" method="get" role="search">
+        <span class="header-search__icon" aria-hidden="true">⌕</span>
+        <input type="search" name="q" placeholder="Search courses, topics…" value="{{ request.GET.q }}">
+      </form>
+
+      <nav class="header-nav" aria-label="Primary">
+        <a href="{% url 'lms:roadmap' %}">Roadmap <span class="nav-badge">New</span></a>
+        <a href="{% url 'lms:catalog' %}">Courses</a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'lms:dashboard' %}">Dashboard</a>
+          {% if user.is_staff %}<a href="/admin/">Admin</a>{% endif %}
+          <a class="btn btn--primary btn--sm" href="{% url 'lms:dashboard' %}">Go to Dashboard</a>
+        {% else %}
+          <a href="{% url 'accounts:login' %}">Log in</a>
+          <a class="btn btn--primary btn--sm" href="{% url 'accounts:signup' %}">Start Learning</a>
+        {% endif %}
+      </nav>
+
+      <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-drawer" id="mobile-drawer">
+    <div class="mobile-drawer__panel">
+      <form class="header-search is-open" action="{% url 'lms:catalog' %}" method="get" role="search">
+        <span class="header-search__icon" aria-hidden="true">⌕</span>
+        <input type="search" name="q" placeholder="Search courses, topics…" value="{{ request.GET.q }}">
+      </form>
+      <nav class="header-nav" aria-label="Mobile">
+        <a href="{% url 'lms:home' %}">Home</a>
+        <a href="{% url 'lms:roadmap' %}">Roadmap</a>
+        <a href="{% url 'lms:catalog' %}">Courses</a>
+        <a href="{% url 'lms:quizzes' %}">Quizzes &amp; Exams</a>
+        {% for cat in nav_categories %}
+          <a href="{% url 'lms:catalog' %}?category={{ cat.slug }}">{{ cat.name }}</a>
+        {% endfor %}
+        {% if user.is_authenticated %}
+          <a href="{% url 'lms:dashboard' %}">Dashboard</a>
+          <a href="{% url 'lms:billing' %}">Billing</a>
+          <a href="{% url 'accounts:logout' %}">Log out</a>
+        {% else %}
+          <a href="{% url 'accounts:login' %}">Log in</a>
+          <a href="{% url 'accounts:signup' %}">Sign up</a>
+        {% endif %}
+      </nav>
+    </div>
+  </div>
+
+  {% if messages %}
+  <div class="flash-wrap">
+    {% for message in messages %}
+      <div class="flash flash-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>© {% now "Y" %} EduPlatform · From secondary school to engineering</p>
+      <nav aria-label="Footer">
+        <a href="/admin/">Admin Login</a>
+        <a href="{% url 'accounts:login' %}">Instructor Login</a>
+        <a href="{% url 'lms:billing' %}">Support</a>
+        <a href="{% url 'lms:home' %}">Privacy</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/main.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Payment status — EduPlatform{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:2rem 0 3rem;max-width:640px;">
+  <div class="panel" style="text-align:center;">
+    <h1>Payment {{ txn.get_status_display }}</h1>
+    <p>{{ txn.course.title }} · ৳{{ txn.amount }} via {{ txn.get_method_display }}</p>
+    {% if txn.bkash_trx_id %}<p>TrxID: <strong>{{ txn.bkash_trx_id }}</strong></p>{% endif %}
+    {% if txn.status == "pending" %}
+      <p>An admin will verify your transfer and activate enrollment. You can also use coupon <code>FREELEARN</code> on a new checkout for instant demo access.</p>
+    {% elif txn.status == "approved" %}
+      <a class="btn btn--primary" href="{% url 'lms:player_start' txn.course.slug %}">Start learning</a>
+    {% else %}
+      <a class="btn btn--outline" href="{% url 'lms:checkout' txn.course.slug %}">Try again</a>
+    {% endif %}
+    <p style="margin-top:1.25rem;"><a href="{% url 'lms:dashboard' %}">Back to dashboard</a></p>
+  </div>
+</div>
+{% endblock %}

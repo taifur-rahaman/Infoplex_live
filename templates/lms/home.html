@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}EduPlatform — Master Your Future{% endblock %}
+
+{% block content %}
+<section class="hero-bleed" aria-label="EduPlatform hero">
+  <div class="hero-orbit" aria-hidden="true"></div>
+  <div class="hero-bleed__inner">
+    <p class="hero-bleed__brand">EduPlatform</p>
+    <h1 class="hero-bleed__title">Master Your Future: From Secondary School to Engineering.</h1>
+    <p class="hero-bleed__lede">Structured paths, live progress, and module quizzes — built for SSC through CSE &amp; EEE.</p>
+    <div class="hero-actions">
+      <a class="btn btn--primary" href="{% url 'lms:catalog' %}">Start Learning Now</a>
+      <a class="btn btn--ghost" href="{% url 'lms:roadmap' %}">Try our Roadmap</a>
+    </div>
+  </div>
+</section>
+
+<div class="home-body">
+  <aside class="sidebar panel--lift">
+    <p class="sidebar__label">My Menu</p>
+    <a class="side-link is-active" href="{% url 'lms:home' %}"><span class="side-link__dot"></span> Dashboard Home</a>
+    <a class="side-link" href="{% url 'lms:roadmap' %}"><span class="side-link__dot"></span> My Learning Roadmap</a>
+    <a class="side-link" href="{% url 'lms:quizzes' %}"><span class="side-link__dot"></span> Quizzes &amp; Exams</a>
+    <a class="side-link" href="{% url 'lms:billing' %}"><span class="side-link__dot"></span> Payment Methods</a>
+    <p class="sidebar__label">Categories</p>
+    {% for cat in categories %}
+      <a class="side-link" href="{% url 'lms:catalog' %}?category={{ cat.slug }}">{{ cat.name }}</a>
+    {% empty %}
+      <p class="empty-state" style="padding:1rem;border:0;">Categories will appear after seeding.</p>
+    {% endfor %}
+  </aside>
+
+  <div>
+    <form class="wizard panel--lift" action="{% url 'lms:roadmap' %}" method="get">
+      <h2>Roadmap Wizard</h2>
+      <div class="field">
+        <label for="id_current_level">Current Level</label>
+        {{ roadmap_form.current_level }}
+      </div>
+      <div class="field">
+        <label for="id_interest">Interest</label>
+        {{ roadmap_form.interest }}
+      </div>
+      <button class="btn btn--primary" type="submit">Get Path</button>
+    </form>
+
+    <h2 style="margin-bottom:1rem;">Category Grid</h2>
+    <div class="category-grid">
+      {% for cat in categories %}
+        <a class="cat-tile" href="{% url 'lms:catalog' %}?category={{ cat.slug }}">
+          <span class="cat-tile__icon">{{ cat.icon|default:cat.name|truncatechars:3 }}</span>
+          <h3>{{ cat.name }}</h3>
+          <p>{{ cat.course_count }} course{{ cat.course_count|pluralize }} · {{ cat.description|truncatewords:10 }}</p>
+        </a>
+      {% empty %}
+        <div class="empty-state" style="grid-column:1/-1;">
+          <h2>No categories yet</h2>
+          <p>Run <code>python manage.py seed_demo</code> to load demo content.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <aside class="rail-right panel panel--lift">
+    {% if user.is_authenticated and stats %}
+      <h2 style="font-size:1.1rem;margin-bottom:0.75rem;">Your snapshot</h2>
+      <div class="stat-row">
+        <div class="stat"><strong>{{ stats.in_progress }}</strong><span>Courses in Progress</span></div>
+        <div class="stat"><strong>{{ stats.avg_quiz }}%</strong><span>Avg. Quiz Score</span></div>
+        <div class="stat"><strong>{{ stats.plan }}</strong><span>Subscription</span></div>
+      </div>
+      {% if resume and resume.last_lesson %}
+        <div class="resume-card">
+          <div class="resume-card__thumb" aria-hidden="true">▶</div>
+          <div class="resume-card__body">
+            <h3>{{ resume.last_lesson.title }} · {{ resume.course.code }}</h3>
+            <a class="btn btn--primary btn--sm btn--block" href="{{ resume.last_lesson.get_absolute_url }}">Continue Video</a>
+          </div>
+        </div>
+      {% endif %}
+      <h3 style="font-size:0.95rem;margin-bottom:0.35rem;">Upcoming Deadlines</h3>
+      <ul class="deadline-list">
+        {% for d in deadlines %}
+          <li>
+            {{ d.course.code }} — due
+            <time datetime="{{ d.deadline|date:'c' }}">{{ d.deadline|timesince }} remaining</time>
+          </li>
+        {% empty %}
+          <li>No upcoming deadlines. Enjoy the pace.</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <h2 style="font-size:1.15rem;">Learn with structure</h2>
+      <p>Sign in to resume lessons, track quiz scores, and see deadlines here.</p>
+      <a class="btn btn--primary btn--block" href="{% url 'accounts:signup' %}">Create free account</a>
+      <a class="btn btn--outline btn--block" style="margin-top:0.5rem;" href="{% url 'accounts:login' %}">Log in</a>
+    {% endif %}
+  </aside>
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}{% if category %}{{ category.name }} · {% endif %}Course Catalog — EduPlatform{% endblock %}
+
+{% block content %}
+<div class="page-shell page-shell--catalog">
+  <aside class="sidebar">
+    <p class="sidebar__label">Filters</p>
+    <div class="filter-group">
+      <h4>Category</h4>
+      <ul class="filter-list">
+        <li><a href="{% url 'lms:catalog' %}" class="{% if not selected.category %}is-active{% endif %}">All</a></li>
+        {% for cat in categories %}
+          <li>
+            <a href="?category={{ cat.slug }}&level={{ selected.level }}&topic={{ selected.topic }}&duration={{ selected.duration }}&q={{ selected.q }}"
+               class="{% if selected.category == cat.slug %}is-active{% endif %}">{{ cat.name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="filter-group">
+      <h4>Level</h4>
+      <ul class="filter-list">
+        <li><a href="?category={{ selected.category }}&topic={{ selected.topic }}&duration={{ selected.duration }}&q={{ selected.q }}" class="{% if not selected.level %}is-active{% endif %}">Any</a></li>
+        {% for val, label in levels %}
+          <li>
+            <a href="?category={{ selected.category }}&level={{ val }}&topic={{ selected.topic }}&duration={{ selected.duration }}&q={{ selected.q }}"
+               class="{% if selected.level == val %}is-active{% endif %}">{{ label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="filter-group">
+      <h4>Topic</h4>
+      <ul class="filter-list">
+        <li><a href="?category={{ selected.category }}&level={{ selected.level }}&duration={{ selected.duration }}&q={{ selected.q }}" class="{% if not selected.topic %}is-active{% endif %}">Any</a></li>
+        {% for t in topics %}
+          <li>
+            <a href="?category={{ selected.category }}&level={{ selected.level }}&topic={{ t }}&duration={{ selected.duration }}&q={{ selected.q }}"
+               class="{% if selected.topic == t %}is-active{% endif %}">{{ t }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="filter-group">
+      <h4>Duration</h4>
+      <ul class="filter-list">
+        <li><a href="?category={{ selected.category }}&level={{ selected.level }}&topic={{ selected.topic }}&q={{ selected.q }}" class="{% if not selected.duration %}is-active{% endif %}">Any</a></li>
+        {% for val, label in durations %}
+          <li>
+            <a href="?category={{ selected.category }}&level={{ selected.level }}&topic={{ selected.topic }}&duration={{ val }}&q={{ selected.q }}"
+               class="{% if selected.duration == val %}is-active{% endif %}">{{ label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </aside>
+
+  <section>
+    <div class="page-title">
+      <h1>{% if category %}{{ category.name }} Courses{% else %}Course Catalog{% endif %}</h1>
+      <p>{% if selected.q %}Results for “{{ selected.q }}” · {% endif %}{{ page_obj.paginator.count }} course{{ page_obj.paginator.count|pluralize }}</p>
+    </div>
+
+    {% if page_obj.object_list %}
+      <div class="course-grid">
+        {% for course in page_obj %}
+          {% include "lms/partials/course_card.html" with course=course %}
+        {% endfor %}
+      </div>
+      {% if page_obj.paginator.num_pages > 1 %}
+        <nav class="pagination" aria-label="Pagination">
+          {% if page_obj.has_previous %}
+            <a class="btn btn--outline btn--sm" href="?page={{ page_obj.previous_page_number }}&category={{ selected.category }}&level={{ selected.level }}&topic={{ selected.topic }}&duration={{ selected.duration }}&q={{ selected.q }}">‹ Prev</a>
+          {% endif %}
+          <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+          {% if page_obj.has_next %}
+            <a class="btn btn--outline btn--sm" href="?page={{ page_obj.next_page_number }}&category={{ selected.category }}&level={{ selected.level }}&topic={{ selected.topic }}&duration={{ selected.duration }}&q={{ selected.q }}">Next ›</a>
+          {% endif %}
+        </nav>
+      {% endif %}
+    {% else %}
+      <div class="empty-state">
+        <h2>No courses match</h2>
+        <p>Try clearing filters or searching a different topic.</p>
+        <a class="btn btn--primary" href="{% url 'lms:catalog' %}">Reset filters</a>
+      </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}{{ course.title }} — EduPlatform{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:1.5rem 0 3rem;">
+  <p style="color:var(--muted);font-size:0.9rem;margin-bottom:0.5rem;">
+    <a href="{% url 'lms:catalog' %}">Courses</a> /
+    {% if course.category %}<a href="{% url 'lms:catalog' %}?category={{ course.category.slug }}">{{ course.category.name }}</a> /{% endif %}
+    {{ course.code }}
+  </p>
+
+  <div class="detail-hero">
+    <div class="video-frame">
+      {% if course.preview_youtube_id %}
+        <iframe
+          src="https://www.youtube.com/embed/{{ course.preview_youtube_id }}"
+          title="Course preview"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy"></iframe>
+      {% else %}
+        <div style="display:grid;place-items:center;height:100%;color:#fff;">Preview coming soon</div>
+      {% endif %}
+    </div>
+    <aside class="enroll-box">
+      <h1 style="font-size:1.55rem;">{{ course.title }}</h1>
+      <p class="stars">★ {{ avg_rating|floatformat:1 }} <span style="color:var(--muted);font-weight:500;">({{ review_count }} review{{ review_count|pluralize }})</span></p>
+      <p style="margin:0;">{{ course.instructor.get_full_name|default:course.instructor }} · {{ course.get_level_display }} · {{ course.duration_hours }}h</p>
+      <p class="price">{% if course.price %}৳{{ course.price }}{% else %}Free{% endif %}</p>
+      {% if enrolled %}
+        <a class="btn btn--primary btn--block" href="{% url 'lms:player_start' course.slug %}">Continue Learning</a>
+      {% elif user.is_authenticated %}
+        <a class="btn btn--primary btn--block" href="{% url 'lms:checkout' course.slug %}">Enroll Now{% if course.price %} — ৳{{ course.price }}{% endif %}</a>
+      {% else %}
+        <a class="btn btn--primary btn--block" href="{% url 'accounts:login' %}?next={% url 'lms:checkout' course.slug %}">Log in to Enroll</a>
+      {% endif %}
+      <p style="font-size:0.85rem;margin:0;color:var(--muted);">{{ course.lesson_count }} lessons · Manual bKash checkout supported</p>
+    </aside>
+  </div>
+
+  <div class="detail-grid">
+    <section class="panel">
+      <h2>What you will learn</h2>
+      <ul>
+        {% for outcome in course.outcomes_list %}
+          <li>{{ outcome }}</li>
+        {% empty %}
+          <li>{{ course.short_description }}</li>
+        {% endfor %}
+      </ul>
+      <h3 style="margin-top:1.25rem;">About this course</h3>
+      <p>{{ course.description }}</p>
+    </section>
+    <section>
+      <h2 style="margin-bottom:0.75rem;">Syllabus</h2>
+      {% for module in modules %}
+        <details class="syllabus-item" {% if forloop.first %}open{% endif %}>
+          <summary>{{ module.title }} <span aria-hidden="true">+</span></summary>
+          <ul>
+            {% for lesson in module.lessons.all %}
+              <li>{{ lesson.title }} · {{ lesson.duration_minutes }} min{% if lesson.is_preview %} · Preview{% endif %}</li>
+            {% endfor %}
+            {% if module.quiz %}
+              <li>Quiz: {{ module.quiz.title }} ({{ module.quiz.time_limit_minutes }} min)</li>
+            {% endif %}
+          </ul>
+        </details>
+      {% empty %}
+        <div class="empty-state"><p>Syllabus coming soon.</p></div>
+      {% endfor %}
+    </section>
+  </div>
+
+  <div class="detail-grid">
+    <section class="panel">
+      <h2>Instructor</h2>
+      <div class="instructor-row">
+        <div class="avatar">{{ course.instructor.first_name|default:"I"|slice:":1" }}</div>
+        <div>
+          <h3 style="font-size:1.1rem;">{{ course.instructor.get_full_name|default:course.instructor }}</h3>
+          <p>{{ course.instructor_bio|default:"Experienced EduPlatform instructor." }}</p>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h2 style="margin-bottom:0.75rem;">Reviews</h2>
+      <div class="review-list">
+        {% for review in course.reviews.all %}
+          <article class="review-bubble">
+            <p class="stars" style="margin:0 0 0.35rem;">★ {{ review.rating }} · {{ review.user.get_full_name|default:review.user.username }}</p>
+            <p style="margin:0;">{{ review.comment }}</p>
+          </article>
+        {% empty %}
+          <div class="empty-state"><p>No reviews yet — be the first after you enroll.</p></div>
+        {% endfor %}
+      </div>
+      {% if enrolled %}
+        <form method="post" class="form-stack panel" style="margin-top:1rem;">
+          {% csrf_token %}
+          <h3>Leave a review</h3>
+          {{ review_form.as_p }}
+          <button class="btn btn--primary" type="submit">Submit review</button>
+        </form>
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Quizzes &amp; Exams — EduPlatform{% endblock %}
+
+{% block content %}
+<div class="page-shell">
+  <aside class="sidebar">
+    <p class="sidebar__label">Student</p>
+    <a class="side-link" href="{% url 'lms:dashboard' %}">My Courses</a>
+    <a class="side-link is-active" href="{% url 'lms:quizzes' %}">Quizzes &amp; Exams</a>
+    <a class="side-link" href="{% url 'lms:roadmap' %}">Roadmap</a>
+  </aside>
+  <section>
+    <div class="page-title">
+      <h1>Quizzes &amp; Exams</h1>
+      <p>Timed module quizzes with auto-grading.</p>
+    </div>
+    {% if quizzes %}
+      <div class="progress-cards">
+        {% for quiz in quizzes %}
+          <article class="progress-card">
+            <h3 style="font-size:1.05rem;">{{ quiz.title }}</h3>
+            <p style="font-size:0.9rem;margin:0 0 0.75rem;">{{ quiz.module.course.code }} · {{ quiz.time_limit_minutes }} min · pass {{ quiz.pass_score }}%</p>
+            <a class="btn btn--primary btn--sm" href="{% url 'lms:quiz_take' quiz.pk %}">Start quiz</a>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <h2>No quizzes yet</h2>
+        <p>{% if user.is_authenticated %}Enroll in a course to unlock module quizzes.{% else %}Log in and enroll to take exams.{% endif %}</p>
+        <a class="btn btn--primary" href="{% url 'lms:catalog' %}">Browse courses</a>
+      </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

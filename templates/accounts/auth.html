@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}{% if auth_mode == "signup" %}Sign up{% else %}Welcome{% endif %} — EduPlatform{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-form-pane">
+    <div class="auth-tabs">
+      <a href="{% url 'accounts:login' %}" class="{% if auth_mode != 'signup' %}is-active{% endif %}">Login</a>
+      <a href="{% url 'accounts:signup' %}" class="{% if auth_mode == 'signup' %}is-active{% endif %}">Sign Up</a>
+    </div>
+
+    {% if auth_mode == "signup" %}
+      <h1 style="font-size:1.6rem;">Create your account</h1>
+      <p>Join engineers and students learning on EduPlatform.</p>
+      <form method="post" class="form-stack">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}<p class="helptext">{{ field.help_text|safe }}</p>{% endif %}
+            {{ field.errors }}
+          </div>
+        {% endfor %}
+        {{ form.non_field_errors }}
+        <button class="btn btn--primary btn--block" type="submit">Sign Up</button>
+      </form>
+    {% else %}
+      <h1 style="font-size:1.6rem;">Welcome back</h1>
+      <p>Log in to resume lessons and quizzes.</p>
+      <a class="btn btn--outline btn--block" href="#" onclick="return false;" aria-disabled="true" title="Demo: email login only">Continue with Google</a>
+      <div class="divider">OR</div>
+      <form method="post" class="form-stack">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <ul class="errorlist">{{ form.non_field_errors }}</ul>
+        {% endif %}
+        <div class="field">
+          <label for="id_username">Username</label>
+          {{ form.username }}
+        </div>
+        <div class="field">
+          <label for="id_password">Password</label>
+          {{ form.password }}
+        </div>
+        <button class="btn btn--primary btn--block" type="submit">Login</button>
+      </form>
+      <p style="text-align:center;margin-top:1rem;font-size:0.9rem;color:var(--muted);">Demo: <code>student</code> / <code>student123</code></p>
+    {% endif %}
+  </div>
+  <aside class="auth-aside">
+    <div>
+      <div class="auth-rocket" aria-hidden="true"></div>
+      <h2>Join 10,000+ engineers learning today!</h2>
+      <p>Secondary · HSC · CSE · EEE — one roadmap.</p>
+    </div>
+  </aside>
+</div>
+{% endblock %}

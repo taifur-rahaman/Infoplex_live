@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Billing — EduPlatform{% endblock %}
+
+{% block content %}
+<div class="page-shell">
+  <aside class="sidebar">
+    <p class="sidebar__label">Account</p>
+    <a class="side-link" href="{% url 'lms:dashboard' %}">Dashboard</a>
+    <a class="side-link is-active" href="{% url 'lms:billing' %}">Billing</a>
+  </aside>
+  <section>
+    <div class="page-title">
+      <h1>Payment Methods &amp; History</h1>
+      <p>Manual bKash account: <strong>{{ bkash_name }}</strong> · {{ bkash_account }}</p>
+    </div>
+    {% if transactions %}
+      <div class="panel">
+        <ul class="activity-feed">
+          {% for txn in transactions %}
+            <li>
+              <strong>{{ txn.course.title }}</strong> — ৳{{ txn.amount }} · {{ txn.get_method_display }} ·
+              <span style="color:{% if txn.status == 'approved' %}var(--ok){% elif txn.status == 'pending' %}var(--warn){% else %}var(--danger){% endif %};">
+                {{ txn.get_status_display }}
+              </span>
+              <span style="color:var(--muted);"> · {{ txn.created_at|date:"M j, Y" }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <h2>No payments yet</h2>
+        <p>When you checkout with bKash, transfers appear here until an admin approves them.</p>
+        <a class="btn btn--primary" href="{% url 'lms:catalog' %}">Browse courses</a>
+      </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Learning Roadmap — EduPlatform{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:1.5rem 0 3rem;">
+  <div class="page-title">
+    <h1>Learning Roadmap</h1>
+    <p>Pick your level and interest — we’ll suggest a path with prerequisites.</p>
+  </div>
+
+  <form class="wizard" method="get">
+    <h2>Roadmap Wizard</h2>
+    <div class="field">
+      <label for="id_current_level">Current Level</label>
+      {{ form.current_level }}
+    </div>
+    <div class="field">
+      <label for="id_interest">Interest</label>
+      {{ form.interest }}
+    </div>
+    <button class="btn btn--primary" type="submit">Get Path</button>
+  </form>
+
+  {% if path %}
+    <h2 style="margin-top:1rem;">Your suggested path</h2>
+    <div class="roadmap-nodes">
+      {% for course in path %}
+        <a class="road-node {% if course.pk in completed_ids %}is-done{% elif course.pk in enrolled_ids %}is-active{% else %}is-locked{% endif %}"
+           href="{{ course.get_absolute_url }}">
+          {{ course.code|default:course.title }}
+        </a>
+      {% endfor %}
+    </div>
+    <p class="legend">
+      <span><i class="done"></i> Completed</span>
+      <span><i class="active"></i> In Progress</span>
+      <span><i></i> Locked / next up</span>
+    </p>
+  {% endif %}
+
+  <h2 style="margin:2rem 0 1rem;">Prerequisite map</h2>
+  <div class="course-grid">
+    {% for course in all_courses %}
+      <article class="course-card">
+        <div class="course-card__body">
+          <h3>{{ course.code }} · {{ course.title }}</h3>
+          <p style="font-size:0.9rem;margin:0;">
+            {% with prereqs=course.prerequisites.all %}
+              {% if prereqs %}Requires: {% for p in prereqs %}{{ p.code }}{% if not forloop.last %}, {% endif %}{% endfor %}
+              {% else %}No prerequisites
+              {% endif %}
+            {% endwith %}
+          </p>
+          <div class="course-meta" style="margin-top:0.5rem;">
+            <span class="{% if course.pk in completed_ids %}stars{% endif %}">
+              {% if course.pk in completed_ids %}Completed{% elif course.pk in enrolled_ids %}In progress{% else %}Available{% endif %}
+            </span>
+          </div>
+          <a class="btn btn--outline btn--sm" href="{{ course.get_absolute_url }}">View</a>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

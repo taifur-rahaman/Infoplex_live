@@ -1,0 +1,17 @@
+<article class="course-card">
+  <div class="course-card__media" style="{% if course.category.icon == 'cse' %}background:linear-gradient(145deg,#0e4f6e,#0a7c6e);{% elif course.category.icon == 'eee' %}background:linear-gradient(145deg,#1e3a5f,#0a7c6e);{% elif course.category.icon == 'hsc' %}background:linear-gradient(145deg,#0f3d3a,#2a6f6a);{% else %}background:linear-gradient(145deg,#243447,#0a7c6e);{% endif %}">
+    <span>{{ course.code|default:course.level }}</span>
+  </div>
+  <div class="course-card__body">
+    <h3>{{ course.title }}</h3>
+    <p style="margin:0;font-size:0.9rem;">{{ course.instructor.get_full_name|default:course.instructor }}</p>
+    <div class="course-meta">
+      <span>{{ course.duration_hours }}h</span>
+      {% with avg=course.average_rating %}
+        <span class="stars">★ {{ avg.0|floatformat:1 }}/5</span>
+      {% endwith %}
+      <span>৳{{ course.price }}</span>
+    </div>
+    <a class="btn btn--outline btn--sm" href="{{ course.get_absolute_url }}">View Course</a>
+  </div>
+</article>

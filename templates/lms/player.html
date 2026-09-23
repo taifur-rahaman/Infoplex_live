@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}{{ lesson.title }} · {{ course.code }} — Player{% endblock %}
+
+{% block content %}
+<div class="player-layout">
+  <div class="player-main" data-tabs>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+      <div>
+        <p style="margin:0;font-size:0.85rem;color:var(--muted);">{{ course.code }} · {{ lesson.module.title }}</p>
+        <h1 style="font-size:1.35rem;margin:0;">{{ lesson.title }}</h1>
+      </div>
+      <div style="min-width:160px;">
+        <p style="margin:0 0 0.35rem;font-size:0.85rem;" data-progress-label>{{ progress_percent }}% complete</p>
+        <div class="progress-bar"><span data-progress-bar style="width:{{ progress_percent }}%;"></span></div>
+      </div>
+    </div>
+
+    <div class="video-frame">
+      {% if lesson.youtube_id %}
+        <iframe
+          src="https://www.youtube.com/embed/{{ lesson.youtube_id }}"
+          title="{{ lesson.title }}"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
+      {% else %}
+        <div style="display:grid;place-items:center;height:100%;color:#fff;">Video unavailable</div>
+      {% endif %}
+    </div>
+
+    <div class="player-tabs">
+      <button type="button" class="is-active" data-tab="overview">Overview</button>
+      <button type="button" data-tab="qa">Q&amp;A</button>
+      <button type="button" data-tab="notes">Notes</button>
+    </div>
+    <div class="tab-panel is-active panel" data-panel="overview" style="border:0;box-shadow:none;padding:0;">
+      <p>{{ lesson.module.description|default:lesson.content }}</p>
+      <p>{{ lesson.content }}</p>
+      <div class="player-actions">
+        {% if prev_lesson %}
+          <a class="btn btn--outline btn--sm" href="{{ prev_lesson.get_absolute_url }}">← Previous</a>
+        {% endif %}
+        <form method="post" action="{% url 'lms:mark_complete' lesson.pk %}" data-complete>
+          {% csrf_token %}
+          <button class="btn btn--primary btn--sm" type="submit">Mark complete</button>
+        </form>
+        {% if next_lesson %}
+          <a class="btn btn--outline btn--sm" href="{{ next_lesson.get_absolute_url }}">Next →</a>
+        {% endif %}
+        {% if lesson.module.quiz %}
+          <a class="btn btn--accent btn--sm" href="{% url 'lms:quiz_take' lesson.module.quiz.pk %}">Take Module Quiz</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="tab-panel panel" data-panel="qa" style="border:0;box-shadow:none;padding:0;">
+      <div class="empty-state">
+        <h2>Q&amp;A</h2>
+        <p>Ask questions in class discussions — coming soon. For now, review the module quiz.</p>
+      </div>
+    </div>
+    <div class="tab-panel panel" data-panel="notes" style="border:0;box-shadow:none;padding:0;">
+      <div class="empty-state">
+        <h2>Personal notes</h2>
+        <p>Notes sync is on the roadmap. Capture key formulas while you watch.</p>
+      </div>
+    </div>
+  </div>
+
+  <aside class="syllabus-side">
+    <h2 style="font-size:1.05rem;margin-bottom:0.75rem;">Syllabus</h2>
+    {% for module in modules %}
+      <div class="mod-block">
+        <h4>{{ module.title }}</h4>
+        {% for l in module.lessons.all %}
+          <a class="lesson-link {% if l.pk == lesson.pk %}is-active{% endif %} {% if l.pk in completed_ids %}is-done{% endif %}"
+             href="{% url 'lms:player' course.slug l.pk %}">{{ l.title }}</a>
+        {% endfor %}
+        {% if module.quiz %}
+          <a class="lesson-link" href="{% url 'lms:quiz_take' module.quiz.pk %}">Quiz · {{ module.quiz.time_limit_minutes }} min</a>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </aside>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Quiz result — {{ quiz.title }}{% endblock %}
+
+{% block content %}
+<div class="quiz-shell" style="text-align:center;">
+  <h1>{% if attempt.passed %}Passed{% else %}Keep practicing{% endif %}</h1>
+  <p class="price" style="font-size:3rem;margin:0.5rem 0;">{{ attempt.score }}%</p>
+  <p>Pass mark: {{ quiz.pass_score }}% · {{ quiz.title }}</p>
+  <div class="player-actions" style="justify-content:center;">
+    <a class="btn btn--primary" href="{% url 'lms:player_start' course.slug %}">Back to course</a>
+    <a class="btn btn--outline" href="{% url 'lms:quiz_take' quiz.pk %}">Retake</a>
+    <a class="btn btn--outline" href="{% url 'lms:quizzes' %}">All quizzes</a>
+  </div>
+</div>
+{% endblock %}
