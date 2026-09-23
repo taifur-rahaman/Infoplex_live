@@ -1479,6 +1479,18 @@ p {
     display: block;
   }
 
+  .home-body {
+    margin-top: 1.25rem;
+  }
+
+  .hero-bleed {
+    min-height: auto;
+  }
+
+  .hero-bleed__inner {
+    padding: 3rem 0 2.5rem;
+  }
+
   .mobile-drawer.is-open {
     position: fixed;
     inset: var(--nav-h) 0 0 0;
